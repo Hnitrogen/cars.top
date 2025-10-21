@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Model Compare · Redline Auto</title>
+    <link rel="stylesheet" href="styles/performance.css" />
+  </head>
+  <body>
+    <header class="appbar" id="appbar">
+      <div class="container appbar-inner">
+        <div class="brand">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div class="brand-name">Redline Auto</div>
+        </div>
+        <nav class="nav">
+          <a href="index.html">News</a>
+          <a href="#">EV</a>
+          <a href="#">ICE</a>
+        </nav>
+        <div class="actions"><a class="btn outline" href="#">App</a></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="compare-head">
+        <div class="pill">Model 1: <input placeholder="Enter make/model" /></div>
+        <div class="pill">Model 2: <input placeholder="Enter make/model" /></div>
+        <div class="pill">Model 3: <input placeholder="Optional" /></div>
+        <div class="pill">Model 4: <input placeholder="Optional" /></div>
+        <label class="diff-toggle">
+          <span class="switch" id="switch"></span>
+          <span>Only differences</span>
+        </label>
+        <a class="btn" href="#">Save Comparison</a>
+      </div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table class="compare" id="compareTable">
+          <thead>
+            <tr>
+              <th>Spec</th>
+              <th>Model A</th>
+              <th>Model B</th>
+              <th>Model C</th>
+              <th>Model D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group"><th colspan="5">Powertrain</th></tr>
+            <tr>
+              <td>Engine/Motor</td>
+              <td>3.0T V6</td>
+              <td>3.0T V6</td>
+              <td>4.0T V8</td>
+              <td>Dual‑motor EV</td>
+            </tr>
+            <tr>
+              <td>Max Power</td>
+              <td>380 kW</td>
+              <td>380 kW</td>
+              <td>420 kW</td>
+              <td>450 kW</td>
+            </tr>
+            <tr>
+              <td>0–100 km/h</td>
+              <td>3.5 s</td>
+              <td>3.5 s</td>
+              <td>3.2 s</td>
+              <td>3.1 s</td>
+            </tr>
+            <tr class="group"><th colspan="5">Chassis & Brakes</th></tr>
+            <tr>
+              <td>Drivetrain</td>
+              <td>AWD</td>
+              <td>AWD</td>
+              <td>RWD</td>
+              <td>AWD</td>
+            </tr>
+            <tr>
+              <td>Front Brakes</td>
+              <td>6‑pot 400 mm</td>
+              <td>6‑pot 400 mm</td>
+              <td>10‑pot 420 mm</td>
+              <td>4‑pot 390 mm</td>
+            </tr>
+            <tr class="group"><th colspan="5">Body & Dimensions</th></tr>
+            <tr>
+              <td>Curb Weight</td>
+              <td>1,780 kg</td>
+              <td>1,780 kg</td>
+              <td>1,820 kg</td>
+              <td>2,020 kg</td>
+            </tr>
+            <tr>
+              <td>Drag Coefficient</td>
+              <td>0.30</td>
+              <td>0.30</td>
+              <td>0.29</td>
+              <td>0.27</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">© 2025 Redline Auto</div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+  </body>
+  </html>
