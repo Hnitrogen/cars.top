@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Imagen 4 生成 · Redline Auto</title>
+    <link rel="stylesheet" href="../styles/performance.css" />
+    <style>
+      .gen-wrap { margin-top: 20px; display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
+      .panel { background: var(--color-surface); border: 1px solid rgba(255,255,255,.06); border-radius: 12px; padding: 14px; }
+      .panel h3 { margin: 0 0 10px; font-size: 16px; }
+      .field { display: grid; gap: 6px; margin: 10px 0; }
+      .field label { color: var(--color-muted); font-size: 12px; }
+      .field input[type="text"], .field input[type="password"], .field textarea, .field select, .field input[type="number"] {
+        width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.04); color: #fff; outline: none;
+      }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .muted { color: var(--color-muted); font-size: 12px; }
+      .results {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;
+        min-height: 120px; align-content: start;
+      }
+      .thumb { position: relative; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; overflow: hidden; background: #0a0a0a; }
+      .thumb img { width: 100%; height: auto; display: block; }
+      .thumb .bar { position: absolute; inset: auto 0 0 0; display: flex; gap: 8px; padding: 8px; background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.6)); }
+      .thumb .bar a { font-size: 12px; }
+      .status { display: flex; align-items: center; gap: 8px; color: var(--color-muted); font-size: 12px; min-height: 20px; }
+      .kbd { font-family: var(--font-mono); font-size: 12px; opacity: .9; }
+      .inline { display: inline-flex; align-items: center; gap: 8px; }
+      .switcher { display: flex; align-items: center; gap: 8px; }
+      .danger { color: #ff6b6b; }
+      .divider { height: 1px; background: rgba(255,255,255,.08); margin: 10px 0; }
+      details.tips { margin-top: 12px; }
+      details.tips summary { cursor: pointer; color: var(--color-muted); }
+      .log { font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; background: rgba(255,255,255,.03); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.06); max-height: 200px; overflow: auto; }
+      .hint { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); padding: 8px 10px; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <header class="appbar" id="appbar">
+      <div class="container appbar-inner">
+        <div class="brand">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div class="brand-name">Redline Auto</div>
+        </div>
+        <nav class="nav">
+          <a href="../index.html">News</a>
+          <a href="#">EV</a>
+          <a href="#">ICE</a>
+        </nav>
+        <div class="actions"><a class="btn outline" href="#">App</a></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="section-title" style="margin-top:16px">
+        <div class="bar"></div>
+        <h2 style="margin:0">Imagen 4.0 生图</h2>
+      </div>
+
+      <div class="gen-wrap">
+        <aside class="panel">
+          <h3>参数</h3>
+          <div class="field">
+            <label>Prompt（仅英文，少量文本更佳）</label>
+            <textarea id="prompt" rows="6" placeholder="A minimalist logo for a LLM router market company on a solid white background. Trident in a circle as the main symbol, with ONLY text 'InferEra' below."></textarea>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>长宽比</label>
+              <select id="ratio">
+                <option value="1:1">1:1</option>
+                <option value="9:16">9:16</option>
+                <option value="16:9">16:9</option>
+                <option value="3:4">3:4</option>
+                <option value="4:3">4:3</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>数量</label>
+              <input id="count" type="number" min="1" max="4" value="1" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label>后端地址（默认使用本地代理）</label>
+            <input id="backend" type="text" placeholder="http://127.0.0.1:5001/api/imagen4" value="http://127.0.0.1:5001/api/imagen4" />
+            <div class="muted">建议使用后端代理保护密钥。可参考下方示例。</div>
+          </div>
+
+          <div class="field">
+            <label class="inline">
+              <input id="use-direct" type="checkbox" /> 直连 AiHubMix（不安全）
+            </label>
+            <div class="muted">在浏览器中直连会暴露密钥，仅供临时测试。</div>
+          </div>
+          <div class="field" id="key-field" style="display:none">
+            <label>AiHubMix API Key</label>
+            <input id="apiKey" type="password" placeholder="AIHUBMIX_API_KEY" />
+            <label class="inline" style="margin-top:6px">
+              <input id="rememberKey" type="checkbox" /> 记住到本地（localStorage）
+            </label>
+          </div>
+
+          <div class="status" id="status">就绪</div>
+          <div class="inline">
+            <button class="btn" id="btnGen">生成</button>
+            <button class="btn outline" id="btnClear">清空结果</button>
+          </div>
+
+          <details class="tips">
+            <summary>后端代理（推荐）如何配置？</summary>
+            <div class="muted" style="margin-top:8px">
+              - 运行仓库中的 <span class="kbd">server/imagen4_proxy.py</span><br />
+              - 设置环境变量 <span class="kbd">AIHUBMIX_API_KEY</span><br />
+              - 保持默认后端地址 <span class="kbd">/api/imagen4</span><br />
+              - 本页会调用代理，返回 base64 图片
+            </div>
+          </details>
+
+          <details class="tips">
+            <summary>直连模式（不安全）</summary>
+            <div class="muted" style="margin-top:8px">
+              - 勾选“直连 AiHubMix”，填写 API Key。<br />
+              - 仅用于本地调试，勿在生产使用。<br />
+              - 若直连失败，请优先使用“后端代理”。
+            </div>
+          </details>
+        </aside>
+
+        <section class="panel">
+          <h3>结果</h3>
+          <div class="results" id="results"></div>
+          <details class="tips" style="margin-top:12px">
+            <summary>调试信息</summary>
+            <div class="log" id="log"></div>
+          </details>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">© 2025 Redline Auto</div>
+    </footer>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/imagen4.js"></script>
+  </body>
+  </html>
